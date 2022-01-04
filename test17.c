@@ -344,20 +344,21 @@
 
 // 缺点：对结构体格式有要求，必要放在最后，不是唯一成员。
 
-// #include <stdio.h>
-// struct str{
-//     int len;
-//     char s[0];
-// };
+#include <stdio.h>
+struct str{
+    int len;
+    char s[0];
+};
 
-// struct foo {
-//     struct str *a;
-// };
+struct foo {
+    struct str *a;
+};
 
-// int main(int argc, char** argv) {
-//     struct foo f={0};
-//     if (f.a->s) {
-//         printf("%x\n",f.a->s);
-//     }
-//     return 0;
-// }
+int main(int argc, char** argv) {
+    struct foo f={0};
+    if (f.a->s) {
+        // printf(f.a->s); 为什么这样写死错误
+        printf("%x\n",f.a->s); // 为什么打印输出4
+    }
+    return 0;
+}
