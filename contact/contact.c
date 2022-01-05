@@ -3,34 +3,55 @@
 // 初始化通讯录
 void InitContact(struct Contact *ps)
 {
-    memset(ps->data, 0, sizeof(ps->data));
-    ps->size = 0; //设置通讯录最初只有0个元素
+    ps->data = (struct PeoInfo *)malloc(3 * sizeof(struct PeoInfo));
+    if (ps->data == NULL)
+    {
+        return;
+    }
+    ps->size = 0;
+    ps->capacity = DEFAULT_SZ;
+}
+
+// 检测容量
+void CheckCapacity(struct Contact *ps)
+{
+    if (ps->size == ps->capacity)
+    {
+        // 增容
+        struct PeoInfo *ptr = realloc(ps->data, (ps->capacity + 2) * sizeof(struct PeoInfo));
+        if (ptr != NULL)
+        {
+            ps->data = ptr;
+            ps->capacity += 2;
+            printf("增容成功\n");
+        }
+        else
+        {
+            printf("增容失败\n");
+        }
+    }
 }
 
 // 增加一个信息到通讯录的实现
 void AddContact(struct Contact *ps)
 {
-    if (ps->size == MAX)
-    {
-        printf("通讯录已满,无法增加\n");
-    }
-    else
-    {
-        printf("请输入名字:>");
-        scanf("%s", ps->data[ps->size].name);
-        // 因为其他都是数组所以不用取地址，年龄是整型需要取地址
-        printf("请输入年龄:>");
-        scanf("%d", &(ps->data[ps->size].age));
-        printf("请输入性别:>");
-        scanf("%s", ps->data[ps->size].sex);
-        printf("请输入电话:>");
-        scanf("%s", ps->data[ps->size].tele);
-        printf("请输入地址:>");
-        scanf("%s", ps->data[ps->size].addr);
+    // 检测当前通讯录的容量，如果满了，增减空间；如果不满，无操作
+    CheckCapacity(ps);
+    // 增加数据
+    printf("请输入名字:>");
+    scanf("%s", ps->data[ps->size].name);
+    // 因为其他都是数组所以不用取地址，年龄是整型需要取地址
+    printf("请输入年龄:>");
+    scanf("%d", &(ps->data[ps->size].age));
+    printf("请输入性别:>");
+    scanf("%s", ps->data[ps->size].sex);
+    printf("请输入电话:>");
+    scanf("%s", ps->data[ps->size].tele);
+    printf("请输入地址:>");
+    scanf("%s", ps->data[ps->size].addr);
 
-        ps->size++;
-        printf("添加成功!!\n");
-    }
+    ps->size++;
+    printf("添加成功!!\n");
 }
 
 // 打印通讯录中的信息的实现
@@ -104,21 +125,21 @@ void SearchContact(const struct Contact *ps)
     printf("请输入要查找人的名字:>\n");
     scanf("%s", name);
     int pos = FindByName(ps, name);
-    if(pos == -1)
+    if (pos == -1)
     {
         printf("通讯录里面没有这个人\n");
     }
     else
     {
-        printf("%-20s\t%-4s\t%-5s\t%-12s\t%-20s\n", 
-        "名字", "年龄", "性别", "电话", "地址");
+        printf("%-20s\t%-4s\t%-5s\t%-12s\t%-20s\n",
+               "名字", "年龄", "性别", "电话", "地址");
         printf("%-20s\t%-4d\t%-5s\t%-12s\t%-20s\n",
-                   ps->data[pos].name,
-                   ps->data[pos].age,
-                   ps->data[pos].sex,
-                   ps->data[pos].tele,
-                   ps->data[pos].addr);
-    }  
+               ps->data[pos].name,
+               ps->data[pos].age,
+               ps->data[pos].sex,
+               ps->data[pos].tele,
+               ps->data[pos].addr);
+    }
 }
 
 // 修改指定名字的联系人的实现
@@ -128,7 +149,7 @@ void ModifyContact(struct Contact *ps)
     printf("请输入要删除人的名字:>\n");
     scanf("%s", name);
     int pos = FindByName(ps, name);
-    if(pos == -1)
+    if (pos == -1)
     {
         printf("通讯录里面没有这个人\n");
     }
@@ -145,5 +166,12 @@ void ModifyContact(struct Contact *ps)
         printf("请输入地址:>");
         scanf("%s", ps->data[pos].addr);
         printf("修改成功!!\n");
-    }  
+    }
+}
+
+// 销毁通讯录-释放动态开辟的内存
+void DestroyContact(struct Contact *ps)
+{
+    free(ps->data);
+    ps->data = NULL;
 }

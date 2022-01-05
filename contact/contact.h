@@ -1,12 +1,13 @@
 
-#define MAX 1000
+//#define MAX 1000
 #define MAX_NAME 20
 #define MAX_SEX 5
 #define MAX_TELE 12
 #define MAX_ADDR 30
+#define DEFAULT_SZ 3
 #include <stdio.h>
 #include <string.h>
-
+#include <stdlib.h> 
 enum Option
 {
     EXIT, // 0
@@ -28,8 +29,9 @@ struct PeoInfo
 // 通讯录类型
 struct Contact
 {
+    int capacity; // 当前通讯录的最大容量
     int size;                 // 记录当前已有的元素个数
-    struct PeoInfo data[MAX]; // 存放一个信息
+    struct PeoInfo *data; // 存放一个信息
 };
 
 // 声明函数
@@ -49,3 +51,6 @@ void SearchContact(const struct Contact *ps);
 
 // 修改指定名字的联系人的实现
 void ModifyContact(struct Contact *ps);
+
+// 销毁通讯录-释放动态开辟的内存
+void DestroyContact(struct Contact *ps);

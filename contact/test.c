@@ -13,7 +13,7 @@ int main()
 {
     int input = 0;
     // 创建通讯录
-    struct Contact con; //con就是通讯录，里面包含：1000的元素的书和size
+    struct Contact con; //con就是通讯录，里面包含：data指针和size、capacity
     InitContact(&con);
     do
     {
@@ -41,10 +41,12 @@ int main()
 
             break;
         case EXIT:
+            // 销毁通讯录-释放动态开辟的内存
+            DestroyContact();
             printf("退出通讯录\n");
             break;
         default:
-            printf("悬着错误\n");
+            printf("选择错误\n");
             break;
         }
     } while (input);
