@@ -134,26 +134,50 @@
 //     return 0;
 // }
 
-struct S
-{
-    char name[20];
-    int age;
-    double score;
-};
+// struct S
+// {
+//     char name[20];
+//     int age;
+//     double score;
+// };
 
+// int main()
+// {
+//     //struct S s = {"张三",20,55.6};
+//     struct S tmp = {0};
+//     FILE *pf = fopen("test.txt", "rb");
+//     if (pf == NULL)
+//     {
+//         return 0;
+//     }
+//     // 二进制的形式读文件
+//     fread(&tmp, sizeof(struct S), 1, pf);
+//     printf("%s %d %lf\n",tmp.name,tmp.age,tmp.score);
+
+//     // 关闭文件
+//     fclose(pf);
+//     pf = NULL;
+//     return 0;
+// }
+
+// 文件的随机读写
 int main()
 {
-    //struct S s = {"张三",20,55.6};
-    struct S tmp = {0};
-    FILE *pf = fopen("test.txt", "rb");
+    FILE *pf = fopen("text.txt", "r");
     if (pf == NULL)
     {
         return 0;
     }
-    // 二进制的形式读文件
-    fread(&tmp, sizeof(struct S), 1, pf);
-    printf("%s %d %lf\n",tmp.name,tmp.age,tmp.score);
+    // text.txt: a b c d e f
 
+    // 1.定位文件指针
+    // int fseek(pf,(偏移量,单位:字节)，(文件指针的起始位置:SEEK_CUR(文件指针的当前位置)、SEEK_END(文件的末尾位置)、SEEK_SET(文件的起始位置)))
+    // fseek(pf,2,SEEK_CUR); // 从文件指针的当前位置，默认为文件的起始位置   打印结果: c
+     fseek(pf,-4,SEEK_END); // 从文件的末尾位置，   打印结果: c
+    // fseek(pf,2,SEEK_SET); // 从文件的起始位置   打印结果: c
+    // 2.读取文件
+    int ch = fgetc(pf);
+    printf("%c\n",ch); 
     // 关闭文件
     fclose(pf);
     pf = NULL;
